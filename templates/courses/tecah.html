@@ -1,0 +1,46 @@
+{% extends 'layouts/base.html' %}
+
+{% load static %}
+{% load humanize %}
+
+{% block internalStyle %}
+<style>
+    .green{
+        color:green;
+        font-size:1.2rem;
+    }
+
+</style>
+{% endblock internalStyle %}
+
+{% block content %}
+<div class="container">
+<br>
+<h1>Teach on Hogwarts</h1>
+<br>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+<h3 align="center">
+    <i class="fa-solid fa-door-open"></i>
+    Welcome
+    <i class="fa-solid fa-door-open"></i>
+
+</h3><br>
+<img src="{% static 'images/info_banner.png' %}" alt="info" width="770" height="200" style="vertical-align:middle;margin:auto auto"/>
+<br>
+<div class="container">
+    <form class="form-horizontal" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Save">
+    </form>
+</div>
+<br>
+</div>
+
+{% endblock %}

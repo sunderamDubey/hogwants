@@ -1,10 +1,13 @@
 from django.http import Http404
 from django.shortcuts import render
 from django.views.generic import DetailView, ListView
-
+from django.shortcuts import redirect
+from django.contrib import messages
 from cart.cart import Cart
 from courses.models import Course, Category
 from udemy.models import Enroll
+from .forms import CourseForm
+from django.contrib.auth.decorators import login_required
 
 
 class CourseDetailView(DetailView):
@@ -57,3 +60,35 @@ class CoursesByCategoryListView(ListView):
         context['category'] = category
         context['categories'] = Category.objects.all()
         return context
+
+
+@login_required(login_url='accounts:login')
+def add_courses(request):
+    if request.method == 'POST':
+        form = CourseForm(request.POST, request.FILES)
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            category = form.cleaned_data['category']
+            print('------------------------------------------')
+            print(category)
+            print('------------------------------------------')
+
+            short_descrip = form.cleaned_data['short_description']
+            descrip = form.cleaned_data['description']
+            outcome = form.cleaned_data['outcome']
+            require = form.cleaned_data['requirements']
+            lang = form.cleaned_data['language']
+            pr = form.cleaned_data['price']
+            level = form.cleaned_data['level']
+            url = form.cleaned_data['video_url']
+            photo = form.cleaned_data['thumbnail']
+            course_instance = Course(title=title, user=request.user, category=category, short_description=short_descrip,
+                                     description=descrip, outcome=outcome, requirements=require, language=lang, price=pr, level=level, video_url=url, thumbnail=photo)
+            course_instance.save()
+            messages.success(
+                request, f'{course_instance}The course has been added successfully.', 'green')
+            return redirect('courses:add_courses')
+    else:
+        form = CourseForm()
+
+    return render(request, 'courses/tecah.html', {'form': form})
