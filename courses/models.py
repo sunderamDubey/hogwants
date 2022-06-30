@@ -21,8 +21,10 @@ class Category(models.Model):
 class Course(models.Model):
     title = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
-    slug = models.SlugField(max_length=200, unique=True, primary_key=True, auto_created=False)
+    category = models.ForeignKey(
+        Category, on_delete=models.SET_NULL, null=True)
+    slug = models.SlugField(max_length=200, unique=True,
+                            primary_key=True, auto_created=False)
     short_description = models.TextField(blank=False, max_length=60)
     description = models.TextField(blank=False)
     outcome = models.CharField(max_length=200)
@@ -45,9 +47,11 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons')
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, related_name='lessons')
     title = models.CharField(max_length=100)
-    duration = models.FloatField(validators=[MinValueValidator(0.30), MaxValueValidator(30.00)])
+    duration = models.FloatField(
+        validators=[MinValueValidator(0.30), MaxValueValidator(30.00)])
     video_url = models.CharField(max_length=100)
     created_at = models.DateTimeField(default=now)
     updated_at = models.DateTimeField(default=now)

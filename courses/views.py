@@ -86,7 +86,7 @@ def add_courses(request):
                                      description=descrip, outcome=outcome, requirements=require, language=lang, price=pr, level=level, video_url=url, thumbnail=photo)
             course_instance.save()
             messages.success(
-                request, f'{course_instance}The course has been added successfully.', 'green')
+                request, f'The Course -> "{course_instance}" has been added successfully.', 'green')
             return redirect('courses:add_courses')
     else:
         form = CourseForm()
